@@ -1,7 +1,7 @@
 import numpy as np 
 from .base import Lattice
 
-class FCCLattice(Lattice):
+class FCC(Lattice):
     def __init__(self, objects, lattice_spacing_a=1.0, sigma_D=0.01):
         # Define the lattice
         symmetry = {}
@@ -22,9 +22,7 @@ class FCCLattice(Lattice):
                                ]
         lattice_types = [1, 1, 1, 1]
 
-        super(
-            FCCLattice,
-            self).__init__(
+        super().__init__(
             objects,
             lattice_spacing_a=lattice_spacing_a,
             sigma_D=sigma_D,

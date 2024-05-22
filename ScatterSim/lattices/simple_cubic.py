@@ -48,7 +48,7 @@ class SimpleCubic(Lattice):
     def unit_cell_volume(self):
         return self.lattice_spacing_a**3
     
-class RandomizedSimpleCubicLattice(Lattice):
+class RandomizedSimpleCubic(Lattice):
     def __init__(self, objects, lattice_spacing_a=1.0, sigma_D=0.01,
                  filling_probs=None, lattice_coordinates=None,
                  lattice_types=None, n_repeat=3):
@@ -96,9 +96,7 @@ class RandomizedSimpleCubicLattice(Lattice):
         lattice_spacing_a = n_repeat * lattice_spacing_a
 
         # now call parent function to initialize
-        super(
-            RandomizedSimpleCubicLattice,
-            self).__init__(
+        super().__init__(
             objects,
             lattice_spacing_a=lattice_spacing_a,
             sigma_D=sigma_D,

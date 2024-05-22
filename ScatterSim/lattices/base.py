@@ -465,9 +465,7 @@ class ExtendedLattice(Lattice):
                             lattice_coordinates.append((xi, yi, zi))
                             lattice_objects.append(objects[i])
 
-        super(
-            ExtendedLattice,
-            self).__init__(
+        super().__init__(
             objects,
             lattice_coordinates=lattice_coordinates,
             lattice_types=lattice_types,

@@ -2,7 +2,7 @@ import numpy as np
 from .base import NanoObject
 from scipy.special import j1
 
-class CylinderNanoObject(NanoObject):
+class Cylinder(NanoObject):
     """A cylinder nano-object. The canonical (unrotated) version
     has the circular-base in the x-y plane, with the length along z.
 
@@ -22,7 +22,7 @@ class CylinderNanoObject(NanoObject):
     """
 
     def __init__(self, pargs={}):
-        super(CylinderNanoObject, self).__init__(pargs=pargs)
+        super().__init__(pargs=pargs)
 
         if 'radius' not in self.pargs:
             self.pargs['radius'] = 1.0

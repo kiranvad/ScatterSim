@@ -1,7 +1,7 @@
 import numpy as np 
 from .base import Lattice 
 
-class BCCLattice(Lattice):
+class BCC(Lattice):
     def __init__(self, objects, lattice_spacing_a=1.0, sigma_D=0.01):
         ''' cannot specify lattice_types or lattice_coordinates'''
         # Define the lattice
@@ -21,9 +21,7 @@ class BCCLattice(Lattice):
         # positions = ['all']
         lattice_positions = ['corner', 'center']
 
-        super(
-            BCCLattice,
-            self).__init__(
+        super().__init__(
             objects,
             lattice_spacing_a=lattice_spacing_a,
             sigma_D=sigma_D,

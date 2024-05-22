@@ -1,7 +1,7 @@
 from .base import Lattice
 import numpy as np 
 
-class DiamondTwoParticleLattice(Lattice):
+class DiamondTwoParticle(Lattice):
     # a.k.a. zincblende
     '''
         These are implied:
@@ -51,9 +51,7 @@ class DiamondTwoParticleLattice(Lattice):
 
         lattice_types = [1, 1, 1, 1, 2, 2, 2, 2]
 
-        super(
-            DiamondTwoParticleLattice,
-            self).__init__(
+        super().__init__(
             objects,
             lattice_spacing_a=lattice_spacing_a,
             sigma_D=sigma_D,

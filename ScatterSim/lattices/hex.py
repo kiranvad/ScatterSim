@@ -1,7 +1,7 @@
 import numpy as np 
 from .base import Lattice
 
-class HexagonalLattice(Lattice):
+class Hexagonal(Lattice):
     def __init__(self, objects, lattice_spacing_a=1.0, lattice_spacing_b=None,
                  lattice_spacing_c=None, sigma_D=0.01, lattice_types=None,
                  lattice_coordinates=None, lattice_positions=None,
@@ -50,9 +50,7 @@ class HexagonalLattice(Lattice):
 
         # TODO : gamma should be 60 deg I think (but alpha, beta, gamma are not
         # really used)
-        super(
-            HexagonalLattice,
-            self).__init__(
+        super(self).__init__(
             objects,
             lattice_spacing_a=lattice_spacing_a,
             lattice_spacing_b=lattice_spacing_b,
@@ -116,7 +114,7 @@ class HexagonalLattice(Lattice):
     def unit_cell_volume(self):
         raise NotImplementedError("Add if needed")
     
-class HexagonalDiamondLattice(HexagonalLattice):
+class HexagonalDiamond(Hexagonal):
     # Initialization
     ########################################
     def __init__(self, objects, lattice_spacing_a=None, lattice_spacing_b=None,
@@ -172,9 +170,7 @@ class HexagonalDiamondLattice(HexagonalLattice):
                                 #]
         lattice_types = [1,1,1,1]
 
-        super(
-            HexagonalDiamondLattice,
-            self).__init__(
+        super().__init__(
             objects,
             lattice_spacing_a=lattice_spacing_a,
             lattice_spacing_b=lattice_spacing_b,

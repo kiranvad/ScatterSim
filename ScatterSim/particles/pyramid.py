@@ -1,7 +1,7 @@
 import numpy as np 
 from .base import NanoObject 
 
-class PyramidNanoObject(NanoObject):
+class Pyramid(NanoObject):
     """ A square-based truncated pyramid nano-object. The canonical (unrotated)
     version has the square-base in the x-y plane, with the peak pointing along
     +z.  The base-edges are parallel to the x-axis and y-axis (i.e. the corners
@@ -26,7 +26,7 @@ class PyramidNanoObject(NanoObject):
     """
 
     def __init__(self, pargs={}):
-        super(PyramidNanoObject, self).__init__(pargs=pargs)
+        super().__init__(pargs=pargs)
 
         # defaults
         if 'radius' not in self.pargs:
