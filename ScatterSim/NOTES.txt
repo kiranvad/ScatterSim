@@ -1,3 +1,0 @@
-Notes for the current distribution:
-1. Modeling scattering from an arbitrary potential currently not supported
-	(easy to add)
