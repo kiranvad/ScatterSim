@@ -1,3 +1,4 @@
+import numpy as np
 from .base import Lattice
 
 class SimpleCubic(Lattice):
@@ -49,9 +50,14 @@ class SimpleCubic(Lattice):
         return self.lattice_spacing_a**3
     
 class RandomizedSimpleCubic(Lattice):
-    def __init__(self, objects, lattice_spacing_a=1.0, sigma_D=0.01,
-                 filling_probs=None, lattice_coordinates=None,
-                 lattice_types=None, n_repeat=3):
+    def __init__(self, objects, 
+                 lattice_spacing_a=1.0, 
+                 sigma_D=0.01,
+                 filling_probs=None, 
+                 lattice_coordinates=None,
+                 lattice_types=None, 
+                 n_repeat=3
+                 ):
         ''' This is an extended lattice where we randomize the filling.
             objects : the NanoObjects (or composite) to place in lattice
             lattice_spacing_a/b/c : the a/b/c lattice spacings
