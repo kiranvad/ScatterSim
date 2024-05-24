@@ -17,8 +17,11 @@ class BCC(Lattice):
         lattice_coordinates = np.array([(0.0, 0.0, 0.0),
                                         (0.5, 0.5, 0.5),
                                         ])
-        lattice_types = [1, 1]
-        # positions = ['all']
+        if len(objects)==1:
+            lattice_types = [1, 1]
+        else:
+            lattice_types = [1, 2]
+
         lattice_positions = ['corner', 'center']
 
         super().__init__(
@@ -32,7 +35,6 @@ class BCC(Lattice):
 
     def symmetry_factor(self, h, k, l):
         """Returns the symmetry factor (0 for forbidden)."""
-        return 1
         if (h + k + l) % 2 == 0:
             return 2
         else:

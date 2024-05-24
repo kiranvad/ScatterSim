@@ -357,7 +357,7 @@ class Lattice:
         if background is None:
             return S
         else:
-            return S + background.val(q) / P
+            return S + background(q) / P
 
     def intensity(self, q, peak, c=1.0, background=None, max_hkl=6):
         """Returns the predicted scattering intensity.
@@ -369,7 +369,7 @@ class Lattice:
         if background is None:
             return PS
         else:
-            return background.val(q) + PS
+            return background(q) + PS
 
     # Outputs
     def to_string(self):
