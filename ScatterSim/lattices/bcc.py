@@ -3,7 +3,12 @@ from .base import Lattice
 
 class BCC(Lattice):
     def __init__(self, objects, lattice_spacing_a=1.0, sigma_D=0.01):
-        ''' cannot specify lattice_types or lattice_coordinates'''
+        '''Body centered cubic lattice.
+        
+        This class accepts upto two objects.
+        If the the objects are list of length two, first one would be 
+        placed at the corner, and second one at the center.
+        '''
         # Define the lattice
         symmetry = {
             'crystal family': 'cubic',

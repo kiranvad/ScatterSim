@@ -76,8 +76,8 @@ class Lattice:
                 'space group': 'N/A',
             }
 
-        # now set
-        self.sigma_D = np.array(sigma_D)          # Lattice disorder
+        # now set Lattice disorder
+        self.sigma_D = np.array(sigma_D)          
         self.symmetry = symmetry
         self.lattice_positions = lattice_positions
         self.lattice_coordinates = lattice_coordinates
@@ -182,10 +182,8 @@ class Lattice:
         qhkl_vector = np.array([2 * np.pi * h / (self.lattice_spacing_a),
                                 2 * np.pi * k / (self.lattice_spacing_b),
                                 2 * np.pi * l / (self.lattice_spacing_c)])
-        qhkl = np.sqrt(
-            qhkl_vector[0]**2 +
-            qhkl_vector[1]**2 +
-            qhkl_vector[2]**2)
+        
+        qhkl = np.sqrt(qhkl_vector[0]**2 + qhkl_vector[1]**2 + qhkl_vector[2]**2)
 
         return (qhkl, qhkl_vector)
 
@@ -232,14 +230,10 @@ class Lattice:
     def sum_over_hkl(self, q, peak, max_hkl=6):
         summation = 0
 
-        for h, k, l, m, f, qhkl, qhkl_vector in self.iterate_over_hkl(
-                max_hkl=max_hkl):
+        for h, k, l, m, f, qhkl, qhkl_vector in self.iterate_over_hkl(max_hkl=max_hkl):
 
             fs = self.form_factor(qhkl_vector)
             term1 = (fs * fs.conjugate()).real
-            # if
-            # term2 = np.exp( -(self.sigma_D**2) * (qhkl**2) *
-            # (self.lattice_spacing_a**2) )
             term2 = self.G_q(qhkl_vector[0], qhkl_vector[1], qhkl_vector[2])
             term3 = peak(q - qhkl)
 
@@ -330,16 +324,11 @@ class Lattice:
         """Returns the beta ratio: |<U(q)>|^2 / <|U(q)|^2>
         for the lattice."""
         # numerator over denominator
-        beta_num = self.sum_over_objects(
-            'beta_numerator', q.shape, float, q)
-        beta_denom = self.sum_over_objects(
-            'form_factor_squared', q.shape, float, q)
+        beta_num = self.sum_over_objects('beta_numerator', q.shape, float, q)
+        beta_denom = self.sum_over_objects('form_factor_squared', q.shape, float, q)
         beta = beta_num / beta_denom
 
         return beta
-
-    # Final S(q) and Z_0(q)
-    ########################################
 
     def structure_factor_isotropic(
             self,
