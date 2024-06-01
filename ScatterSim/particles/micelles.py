@@ -18,12 +18,11 @@ class SphericalMicelle(NanoObject):
         self.d_penetration = self.pargs.get("d_penetration", 1.0)
         self.x_solv = self.pargs.get("x_solv", 0.0)
 
-    def form_factor_squared(self, qvec):
+    def form_factor(self, qvec):
         ''' Compute the form factor of a spherical micelle. '''
         qx, qy, qz = qvec
         q = np.sqrt(qx**2 + qy**2 + qz**2)
-        if not isinstance(q, np.ndarray):
-            q = np.array([q])
+        phase = self.get_phase(qvec)
 
         n_aggreg = ((1-self.x_solv)*(4/3)*np.pi*(self.radius_core**3))/self.v_core
 
@@ -52,20 +51,4 @@ class SphericalMicelle(NanoObject):
         # I(q)_micelle : Sum of 4 terms computed above
         Fq = term1 + term2 + term3 + term4
 
-        return Fq
-    
-    def form_factor(self, qvec):
-        """Return form factor as a square root of the implemented function above."""
-
-        return np.sqrt(self.form_factor_squared(qvec))[0]
-
-    def form_factor_isotropic(self, q, num_phi=50, num_theta=50):
-        """Returns the particle form factor, averaged over every possible orientation.
-        """
-        return self.form_factor(np.array([q, 0, 0], dtype=object))
-    
-    def form_factor_squared_isotropic(self, q, num_phi=50, num_theta=50):
-        """Returns the particle form factor squared, averaged over every
-        possible orientation.
-        """
-        return self.form_factor_squared(np.array([q, 0, 0], dtype=object))
+        return Fq*phase

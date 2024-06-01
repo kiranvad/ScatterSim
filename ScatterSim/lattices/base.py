@@ -187,15 +187,6 @@ class Lattice:
 
         return (qhkl, qhkl_vector)
 
-    def q_hkl_length(self, h, k, l):
-        qhkl, qhkl_vector = self.q_hkl(h, k, l)
-
-        qhkl = np.sqrt(
-            qhkl_vector[0]**2 +
-            qhkl_vector[1]**2 +
-            qhkl_vector[2]**2)
-
-        return qhkl
 
     def iterate_over_hkl_compute(self, max_hkl=6):
         """Returns a sequence of hkl lattice peaks (reflections)."""
@@ -219,30 +210,6 @@ class Lattice:
 
         return r
 
-    def iterate_over_hkl(self, max_hkl=6):
-        ''' This code would previously check if hkl was already computed.
-            I removed it for now. We should eventually add optimizations such
-            as this again later.
-        '''
-        self.hkl_list = self.iterate_over_hkl_compute(max_hkl=max_hkl)
-        return self.hkl_list
-
-    def sum_over_hkl(self, q, peak, max_hkl=6):
-        summation = 0
-
-        for h, k, l, m, f, qhkl, qhkl_vector in self.iterate_over_hkl(max_hkl=max_hkl):
-
-            fs = self.form_factor(qhkl_vector)
-            term1 = (fs * fs.conjugate()).real
-            term2 = self.G_q(qhkl_vector[0], qhkl_vector[1], qhkl_vector[2])
-            term3 = peak(q - qhkl)
-
-            summation += (m * (f**2)) * term1 * term2 * term3
-
-        return summation
-
-    # Form factor computations
-
     def form_factor(self, qvec):
         """Returns the sum of the form factor of particles in the unit cell."""
         return self.sum_over_objects(
@@ -263,26 +230,15 @@ class Lattice:
 
         return V1, V2, V3
 
-    def form_factor_squared(self, qvec):
-        """Returns the sum of the form factor of particles in the unit cell."""
-        return self.sum_over_objects(
-            'form_factor_squared', qvec[0].shape, float, qvec)
-
-    def form_factor_isotropic(self, q):
-        """Returns the sum of the form factor of particles in the unit cell."""
-        return self.sum_over_objects(
-            'form_factor_isotropic', q.shape, complex, q)
-
-    def form_factor_squared_isotropic(self, q):
-        """Returns the sum of the form factor of particles in the unit cell."""
-        return self.sum_over_objects(
-            'form_factor_squared_isotropic', q.shape, float, q)
-
     def V(self, rvec):
         """Returns the sum of the form factor of particles in the unit cell."""
         return self.sum_over_objects('V', rvec[0].shape, float, rvec)
-
-    def G_q(self, qx, qy=None, qz=None):
+    
+    def Pq(self, q):
+        """Returns the sum of the form factor of particles in the unit cell."""
+        return self.sum_over_objects('form_factor_squared_isotropic', q.shape, float, q)
+    
+    def Gq(self, qx, qy=None, qz=None):
         ''' the G(q) from the Debye-Waller factor.
             If sigma_D is a two tuple, then compute the DW factor per unit
             normal.
@@ -315,50 +271,35 @@ class Lattice:
                     (self.lattice_spacing_a**2))
         return res
 
-    def beta_numerator(self, q, num_phi=50, num_theta=50):
-        """returns the numerator of the beta ratio: |<u(q)>|^2 = sum_j[
-        |<f_j(q)>|^2 ] """
-        return self.sum_over_objects('beta_numerator', q.shape, float, q)
-
-    def beta_ratio(self, q, num_phi=50, num_theta=50, approx=False):
+    def beta_ratio(self, q):
         """Returns the beta ratio: |<U(q)>|^2 / <|U(q)|^2>
         for the lattice."""
         # numerator over denominator
         beta_num = self.sum_over_objects('beta_numerator', q.shape, float, q)
-        beta_denom = self.sum_over_objects('form_factor_squared', q.shape, float, q)
+        beta_denom = self.Pq(q)
         beta = beta_num / beta_denom
 
         return beta
 
-    def structure_factor_isotropic(
-            self,
-            q,
-            peak,
-            c=1.0,
-            background=None,
-            max_hkl=6):
-        """Returns the structure factor S(q) for the specified q-position."""
-
-        P = self.form_factor_squared_isotropic(q)
-
-        S = (c / (q**2 * P)) * self.sum_over_hkl(q, peak, max_hkl=max_hkl)
-
-        if background is None:
-            return S
-        else:
-            return S + background(q) / P
-
-    def intensity(self, q, peak, c=1.0, background=None, max_hkl=6):
-        """Returns the predicted scattering intensity.
-            This is Z0(q) in Kevin's paper
+    def Z0(self, q, peak, background=None, max_hkl=6):
+        """Return Z0(q)
         """
+        summation = 0
+        hkl_list = self.iterate_over_hkl_compute(max_hkl=max_hkl)
+        for h, k, l, m, f, qhkl, qhkl_vector in hkl_list:
 
-        PS = (c / (q**2)) * self.sum_over_hkl(q, peak, max_hkl=max_hkl)
+            fs = self.form_factor(qhkl_vector)
+            fs_squared = (fs * fs.conjugate()).real
+            L = peak(q - qhkl)
+
+            summation += (m * (f**2)) * fs_squared * L
+    
+        out = (1.0 / (q**2)) * summation
 
         if background is None:
-            return PS
+            return out
         else:
-            return background(q) + PS
+            return background(q) + out
 
     # Outputs
     def to_string(self):

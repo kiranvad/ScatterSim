@@ -26,13 +26,12 @@ class Sphere(NanoObject):
 
     def form_factor(self, qvec):
         ''' Compute the form factor of a sphere. '''
-        phase = self.get_phase(qvec)
-
         qx, qy, qz = qvec
-
+        phase = self.get_phase(qvec)
+        q = np.sqrt(qx**2 + qy**2 + qz**2)
+     
         volume = self.volume()
 
-        q = np.sqrt(qx**2 + qy**2 + qz**2)
         qR = q * self.radius
 
         # threshold to avoid zero values

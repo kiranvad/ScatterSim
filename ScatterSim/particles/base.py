@@ -34,34 +34,6 @@ class NanoObject:
         # this will set the rotation matrix
         self.set_angles(eta=eta, phi=phi, theta=theta)
 
-    def __add__(self, other):
-        ''' The add operator should now
-            just create a new composite NanoObject.
-            There are four cases:
-                NanoObject + NanoObject
-                NanoObject + CompositeNanoObject
-                CompositeNanoObject + CompositeNanoObject
-                CompositeNanoObject + NanoObject
-
-            # Note : the pargs of the new object is overridden by original
-            # object
-        '''
-        from .CompositeNanoObjects import CompositeNanoObject  # noqa
-        if isinstance(self, CompositeNanoObject):
-            nano_objects = self.nano_objects
-            pargs = self.pargs
-        else:
-            nano_objects = [self]
-            # no pargs for parent composite object set yet
-            pargs = {}
-
-        nano_objects.append(other)
-
-        # TODO : should move to composite nano object code
-        obj = CompositeNanoObject(nano_objects, pargs=pargs)
-        obj.pargs['sign'] = 1.
-        return obj
-
     def check_arg(self, name, pargs, default=0):
         ''' Check dictionary for a parameter. If not there, set the parg
             to the default.
@@ -829,6 +801,7 @@ class PolydisperseNanoObject(NanoObject):
         """Returns the complex-amplitude of the form factor at the given
             <F>_d
         q-coordinates."""
+
         return self.dist_sum('form_factor', qvec[0].shape, complex, qvec)
 
     def form_factor_distavg_squared(self, qvec):
@@ -894,7 +867,7 @@ class PolydisperseNanoObject(NanoObject):
             num_phi=num_phi,
             num_theta=num_theta)
 
-    def beta_ratio(self, q, num_phi=50, num_theta=50, approx=False):
+    def beta_ratio(self, q, num_phi=50, num_theta=50, approx=True):
         """Returns the beta ratio: |<<F(q)>_iso>_d|^2 / <<|F(q)|^2>_iso>_d This
         ratio depends on polydispersity: for a monodisperse system, beta = 1
         for all q. """
